@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FirebaseConfiguration {
 
-    @Value("${securivault.firebase.service_account}")
+    @Value("${projet-annuel.firebase.service_account}")
     private String privateKeyJson;
 
     @Bean
