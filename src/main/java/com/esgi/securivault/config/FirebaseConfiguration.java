@@ -10,24 +10,32 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import java.io.File;
+import java.io.FileInputStream;
 
 @Configuration
 public class FirebaseConfiguration {
 
     @Value("${securivault.firebase.service_account}")
-    private String serviceAccountPath; // ex: "firebase-service-account.json"
+    private String firebaseCredentialsPath;
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        InputStream credentials = new ClassPathResource(serviceAccountPath).getInputStream();
-        FirebaseOptions firebaseOptions = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(credentials))
+        try {
+            ClassPathResource resource = new ClassPathResource(firebaseCredentialsPath);
+            InputStream serviceAccount = resource.getInputStream();
+            FirebaseOptions options = FirebaseOptions.builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();
-        return FirebaseApp.initializeApp(firebaseOptions);
+            return FirebaseApp.initializeApp(options);
+        } catch (IOException e) {
+            throw new IOException("Failed to load Firebase credentials file: " + firebaseCredentialsPath, e);
+        }
     }
 
     @Bean
     public FirebaseAuth firebaseAuth(FirebaseApp firebaseApp) {
         return FirebaseAuth.getInstance(firebaseApp);
     }
+
 }

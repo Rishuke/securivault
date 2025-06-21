@@ -16,16 +16,12 @@ import org.springframework.web.client.RestClient;
 public class AuthService {
 
     private final FirebaseAuth firebaseAuth;
-
     private static final String API_KEY_PARAM = "key";
     private static final String INVALID_CREDENTIALS_ERROR = "INVALID_LOGIN_CREDENTIALS";
-    private static final String SIGN_IN_BASE_URL =
-            "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
+    private static final String SIGN_IN_BASE_URL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
     private static final String REFRESH_TOKEN_GRANT_TYPE = "refresh_token";
     private static final String INVALID_REFRESH_TOKEN_ERROR = "INVALID_REFRESH_TOKEN";
-    private static final String REFRESH_TOKEN_BASE_URL =
-            "https://securetoken.googleapis.com/v1/token";
-
+    private static final String REFRESH_TOKEN_BASE_URL = "https://securetoken.googleapis.com/v1/token";
     private static final String DUPLICATE_ACCOUNT_ERROR = "EMAIL_EXISTS";
 
     @Value("${securivault.firebase.web-api-key}")
@@ -49,6 +45,7 @@ public class AuthService {
             }
             throw exception;
         }
+
     }
 
     public FirebaseLogInResponse login(String emailId, String password) {
