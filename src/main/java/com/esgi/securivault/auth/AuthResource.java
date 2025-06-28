@@ -22,8 +22,8 @@ public class AuthResource {
         this.authService = authService;
     }
 
-    @GetMapping("/login")
-    public FirebaseLogInResponse login(FirebaseLogInRequest firebaseLogInRequest) {
+    @PostMapping("/login")
+    public FirebaseLogInResponse login(@Valid @RequestBody FirebaseLogInRequest firebaseLogInRequest) {
         return authService.login(firebaseLogInRequest.email(), firebaseLogInRequest.password());
     }
 

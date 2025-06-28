@@ -48,8 +48,8 @@ public class AuthService {
 
     }
 
-    public FirebaseLogInResponse login(String emailId, String password) {
-        FirebaseLogInRequest requestBody = new FirebaseLogInRequest(emailId, password, true);
+    public FirebaseLogInResponse login(String email, String password) {
+        FirebaseLogInRequest requestBody = new FirebaseLogInRequest(email, password);
         return sendLogInRequest(requestBody);
     }
 
