@@ -1,11 +1,12 @@
-package com.esgi.securivault.dto;
+package com.esgi.securivault.entity;
 
-
-public class UserDTO {
+public class User {
+    
     private Long userId;
 
     private String email;
     private String password;
+
     public Long getUserId() {
         return userId;
     }
