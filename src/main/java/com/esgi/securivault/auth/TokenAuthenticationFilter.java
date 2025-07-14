@@ -39,12 +39,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws IOException, ServletException {
-        String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
+        /*String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
 
         if (authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX)) {
             String token = authorizationHeader.replace(BEARER_PREFIX, "");
             Optional<String> userId = extractUserIdFromToken(token);
-
+            System.out.println(token);
             if (userId.isPresent()) {
                 var authentication = new UsernamePasswordAuthenticationToken(userId.get(), null, null);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -53,14 +53,15 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 setAuthErrorDetails(response);
                 return;
             }
-        }
+        }*/
         filterChain.doFilter(request, response);
     }
 
     private Optional<String> extractUserIdFromToken(String token) {
         try {
             FirebaseToken firebaseToken = firebaseAuth.verifyIdToken(token, true);
-            String userId = String.valueOf(firebaseToken.getClaims().get(USER_ID_CLAIM));
+            System.out.println(firebaseToken);
+            String userId = firebaseToken.getUid();
             return Optional.of(userId);
         } catch (FirebaseAuthException exception) {
             return Optional.empty();
