@@ -3,7 +3,6 @@ package com.esgi.securivault.auth;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.auth.UserRecord;
 import com.esgi.securivault.auth.dto.*;
 import com.esgi.securivault.errors.UnauthorizedException;
@@ -40,8 +39,6 @@ public class AuthService {
 
         try {
             firebaseAuth.createUser(request);
-            
-
         } catch (FirebaseAuthException exception) {
             if (exception.getMessage().contains(DUPLICATE_ACCOUNT_ERROR)) {
                 throw new IllegalArgumentException("User already exists");
@@ -50,31 +47,13 @@ public class AuthService {
         }
 
     }
-    public FirebaseToken verifyToken(String token) {
-        /*try {
-            return firebaseAuth.verifyIdToken(token);
-        } catch (FirebaseAuthException e) {
-            throw new UnauthorizedException("Invalid token");
-        }*/
-        return null;
-    }
 
     public FirebaseLogInResponse login(String email, String password) {
-    FirebaseLogInResponse response = sendLogInRequest(new FirebaseLogInRequest(email, password));
-    System.out.println(response);
-    /*try {
-        firebaseAuth.verifyIdToken(response.idToken());
-    } catch (FirebaseAuthException e) {
-        throw new UnauthorizedException("Generated token is invalid");
-
-    }*/
-    
-    return response;
-
-}
+        FirebaseLogInRequest requestBody = new FirebaseLogInRequest(email, password);
+        return sendLogInRequest(requestBody);
+    }
 
     private FirebaseLogInResponse sendLogInRequest(FirebaseLogInRequest firebaseLogInRequest) {
-        
         try {
             return RestClient.create(SIGN_IN_BASE_URL)
                     .post()
