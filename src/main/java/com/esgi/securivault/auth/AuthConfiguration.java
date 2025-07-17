@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class AuthConfiguration {
 
-    private static final String[] WHITELISTED_API_ENDPOINTS = { "/document", "/auth/**","suitcases/**" };
+    private static final String[] WHITELISTED_API_ENDPOINTS = { "/document", "/auth/**" };
 
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
 
@@ -25,8 +25,8 @@ public class AuthConfiguration {
                 .authorizeHttpRequests(authManager -> authManager
                         .requestMatchers(WHITELISTED_API_ENDPOINTS).permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
+                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .httpBasic(AbstractHttpConfigurer::disable);
 
         return http.build();
     }
