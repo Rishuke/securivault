@@ -10,6 +10,9 @@ public class SuitcaseDTO {
     private String id;
     private String name;
     private String code;
+    private String color;
+    private String sensitivity;
+    private String buzzer_freq;
     
     private boolean isLocked;
     
@@ -61,4 +64,22 @@ public class SuitcaseDTO {
     public void setisMooving(boolean isMooving) {
         this.isMooving = isMooving;
     }   
+    public String getColor(){
+        return color;
+    }
+    public void  setColor(String color){
+        this.color = color;
+    }
+    public String getbuzzer_freq(){
+        return buzzer_freq;
+    }
+    public void setbuzzer_freq(String buzzer_freq){
+        this.buzzer_freq = buzzer_freq;
+    }
+    public String getMotionSensitivity(){
+        return sensitivity;
+    }
+    public void  setMotionSensitivity(String sensitivity){
+        this.sensitivity = sensitivity;
+    }
 }
