@@ -14,6 +14,10 @@ public class Suitcase {
     private Map<String, Boolean> userIds;
     private boolean isMooving;
 
+    private String led_color;
+    private int volume;
+    private double sensitivity;
+
 
     public String getId() {
         return id;
@@ -67,5 +71,23 @@ public class Suitcase {
     }
     public void setisMooving(boolean isMooving) {
         this.isMooving = isMooving;
+    }
+    public String getColor(){
+        return led_color;
+    }
+    public void  setColor(String led_color){
+        this.led_color = led_color;
+    }
+    public int getVolume(){
+        return volume;
+    }
+    public void  setVolume(int volume){
+        this.volume = volume;
+    }
+    public double getMotionSensitivity(){
+        return sensitivity;
+    }
+    public void  setMotionSensitivity(double sensitivity2){
+        this.sensitivity = sensitivity2;
     }
 }

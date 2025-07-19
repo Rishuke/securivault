@@ -26,6 +26,9 @@ public class SuitcaseService {
         suitcase.setLocked(true);
         suitcase.setisOn(false);
         suitcase.setCode("0000");
+        suitcase.setColor("red");
+        suitcase.setMotionSensitivity(20.2);
+        suitcase.setVolume(20);
 
         suitcaseRepository.save(suitcase);
         firestore.collection("suitcases").document(userId).set(suitcase);
@@ -108,5 +111,28 @@ public class SuitcaseService {
         }   
         return s;
     }
+    public Suitcase updateBuzzerVolume(String suitcaseId, int volume) {
+        Suitcase suitcase = suitcaseRepository.findById(suitcaseId);
+        suitcase.setVolume(volume);
+        suitcaseRepository.save(suitcase);
+        firestore.collection("suitcases").document(suitcaseId).update("buzzer_freq", volume);
+        return suitcase;
+    }
 
+    public Suitcase updateLedColor(String suitcaseId, String color) {
+        Suitcase suitcase = suitcaseRepository.findById(suitcaseId);
+        suitcase.setColor(color);  // Gardez setColor() si c'est le nom dans votre entité
+        suitcaseRepository.save(suitcase);
+        // Les deux doivent utiliser le même nom de champ
+        firestore.collection("suitcases").document(suitcaseId).update("led_color", color);
+        return suitcase;
+    }
+
+    public Suitcase updateMotionSensitivity(String suitcaseId, double sensitivity) {
+        Suitcase suitcase = suitcaseRepository.findById(suitcaseId);
+        suitcase.setMotionSensitivity(sensitivity);
+        suitcaseRepository.save(suitcase);
+        firestore.collection("suitcases").document(suitcaseId).update("motionSensitivity", sensitivity);
+        return suitcase;
+    }
 }
