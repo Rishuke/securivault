@@ -11,17 +11,18 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
+import java.util.Map;
 
 @Service
 public class AuthService {
 
     private final FirebaseAuth firebaseAuth;
     private static final String API_KEY_PARAM = "key";
-    private static final String INVALID_CREDENTIALS_ERROR = "INVALID_LOGIN_CREDENTIALS";
     private static final String SIGN_IN_BASE_URL = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword";
-    private static final String REFRESH_TOKEN_GRANT_TYPE = "refresh_token";
-    private static final String INVALID_REFRESH_TOKEN_ERROR = "INVALID_REFRESH_TOKEN";
     private static final String REFRESH_TOKEN_BASE_URL = "https://securetoken.googleapis.com/v1/token";
+    private static final String REFRESH_TOKEN_GRANT_TYPE = "refresh_token";
+    private static final String INVALID_CREDENTIALS_ERROR = "INVALID_LOGIN_CREDENTIALS";
+    private static final String INVALID_REFRESH_TOKEN_ERROR = "INVALID_REFRESH_TOKEN";
     private static final String DUPLICATE_ACCOUNT_ERROR = "EMAIL_EXISTS";
 
     @Value("${securivault.firebase.web-api-key}")
@@ -48,7 +49,46 @@ public class AuthService {
 
     }
 
-    public FirebaseLogInResponse login(String email, String password) {
+    public FirebaseLogInResponse loginWithGoogle(String idToken) {
+        try {
+            // Étape 1: Vérifier le token et obtenir l'email
+            var decodedToken = firebaseAuth.verifyIdToken(idToken);
+            var email = decodedToken.getEmail();
+            
+            // Étape 2: Créer un compte s'il n'existe pas
+            try {
+                UserRecord.CreateRequest request = new UserRecord.CreateRequest()
+                    .setEmail(email)
+                    .setEmailVerified(true)
+                    .setUid(decodedToken.getUid());
+                firebaseAuth.createUser(request);
+            } catch (FirebaseAuthException e) {
+                // Ignore si l'utilisateur existe déjà
+                if (!e.getErrorCode().equals(DUPLICATE_ACCOUNT_ERROR)) {
+                    throw e;
+                }
+            }
+            
+            // Étape 3: Générer un custom token
+            String customToken = firebaseAuth.createCustomToken(decodedToken.getUid());
+            
+            // Étape 4: Échanger le custom token contre un ID token
+            return RestClient.create("https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken")
+                    .post()
+                    .uri(uriBuilder -> uriBuilder.queryParam(API_KEY_PARAM, webApiKey).build())
+                    .body(Map.of(
+                        "token", customToken,
+                        "returnSecureToken", true
+                    ))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .retrieve()
+                    .body(FirebaseLogInResponse.class);
+        } catch (FirebaseAuthException | HttpClientErrorException e) {
+            throw new UnauthorizedException("Invalid Google token");
+        }
+    }
+
+    public FirebaseLogInResponse loginWithEmailPassword(String email, String password) {
         FirebaseLogInRequest requestBody = new FirebaseLogInRequest(email, password);
         return sendLogInRequest(requestBody);
     }

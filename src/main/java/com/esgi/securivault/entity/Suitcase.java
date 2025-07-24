@@ -1,5 +1,6 @@
 package com.esgi.securivault.entity;
 
+import java.util.List;
 import java.util.Map;
 
 public class Suitcase {
@@ -11,7 +12,7 @@ public class Suitcase {
     private boolean isOn;
     
     private String code;
-    private Map<String, Boolean> userIds;
+    private List<String> userIds;
     private boolean isMooving;
 
     private String led_color;
@@ -59,11 +60,11 @@ public class Suitcase {
         this.code = code;
     }
 
-    public Map<String, Boolean> getUserIds() {
+    public List<String> getUserIds() {
         return userIds;
     }
 
-    public void setUserIds(Map<String, Boolean> userIds) {
+    public void setUserIds(List<String> userIds) {
         this.userIds = userIds;
     }
     public boolean isMooving() {

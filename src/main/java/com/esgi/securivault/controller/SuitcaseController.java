@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.esgi.securivault.dto.ChangeCodeDTO;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,17 +27,17 @@ public class SuitcaseController {
     }
 
     //  Mettre à jour une valise
-    @PutMapping("/{id}/update")
-    public void updateSuitcase(@PathVariable String id, @RequestBody Suitcase suitcase) {
-        suitcaseService.updateSuitcase(id, suitcase.getName(), suitcase.isLocked(), suitcase.isOn());
-    }
+    // @PutMapping("/{id}/update")
+    // public void updateSuitcase(@PathVariable String id, @RequestBody Suitcase suitcase) {
+    //     suitcaseService.updateSuitcase(id, suitcase.getName(), suitcase.isLocked(), suitcase.isOn());
+    // }
 
-    //  Vérifier le code
-    @PostMapping("/{id}/verify-code")
-    public Suitcase verifyCode(@PathVariable String id, @RequestBody Map<String, String> payload) throws Exception {
-        String code = payload.get("code");
-        return suitcaseService.verifCode(id, code);
-    }
+    // //  Vérifier le code
+    // @PostMapping("/{id}/verify-code")
+    // public Suitcase verifyCode(@PathVariable String id, @RequestBody Map<String, String> payload) throws Exception {
+    //     String code = payload.get("code");
+    //     return suitcaseService.verifCode(id, code);
+    // }
 
     // Changer le code
     @PutMapping("/{id}/change-code")
@@ -51,14 +52,14 @@ public class SuitcaseController {
     }
 
     //  Récupérer une valise par ID
-    @GetMapping("/{id}")
-    public Suitcase getSuitcaseById(@PathVariable String id) {
-        return suitcaseService.getSuitcaseById(id);
-    }
-    @GetMapping("/user/{userId}")
-    public Suitcase getSuitcaseByUserId(@PathVariable String userId) {
-        return suitcaseService.getSuitcaseByUserId(userId);
-    }
+    // @GetMapping("/{id}")
+    // public Suitcase getSuitcaseById(@PathVariable String id) {
+    //     return suitcaseService.getSuitcaseById(id);
+    // }
+    // @GetMapping("/user/{userId}")
+    // public Suitcase getSuitcaseByUserId(@PathVariable String userId) {
+    //     return suitcaseService.getSuitcaseByUserId(userId);
+    // }
     @PutMapping("/{id}/buzzer")
     public Suitcase updateBuzzerVolume(@PathVariable String id, @RequestBody Map<String, Integer> payload) {
         return suitcaseService.updateBuzzerVolume(id, payload.get("buzzer_freq"));
@@ -72,6 +73,16 @@ public class SuitcaseController {
     @PutMapping("/{id}/sensitivity")
     public Suitcase updateMotionSensitivity(@PathVariable String id, @RequestBody Map<String, Double> payload) {
         return suitcaseService.updateMotionSensitivity(id, payload.get("sensitivity"));
+    }
+
+    @PutMapping("/{id}/add-user")
+    public Suitcase addUserToSuitcase(@PathVariable String id, @RequestBody String email) {
+        return suitcaseService.addUserSuitcase(id, email);
+    }
+
+    @GetMapping("/{id}/code")
+    public Map<String, String> getCode(@PathVariable String id) {
+        return suitcaseService.getCode(id);
     }
 
 }
